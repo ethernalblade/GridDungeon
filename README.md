@@ -66,8 +66,8 @@ Planned ideas, the order may change:
 - [x] v1: playable maze with coins, traps and HP
 - [x] v2: split the code into classes (`Map`, `Player`)
 - [ ] v3: hidden traps, fog of war, bigger maps
-- [ ] v4: maps and item data loaded from files
-- [ ] v5: chests, inventory and items
+- [ ] v4: load maps from text files
+- [ ] v5: chests, inventory and items (item data loaded from files)
 - [ ] v6: enemies and turn-based combat
 - [ ] v7: high score table (SQLite)
 
