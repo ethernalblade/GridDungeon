@@ -1,78 +1,59 @@
 ﻿using GridDungeon;
 
-int row = 9;
-int col = 0;
+Player player;
 bool running = true;
 Console.CursorVisible = false;
-int coinsCollected = 0;
-int hp = 2;
 Map.AreaBuilder();
+player = new Player();
 while (running)
 {
-
     Console.SetCursorPosition(0, 0);
-    Console.WriteLine($"Coins collected: {coinsCollected}");
-    Console.WriteLine($"Hp left: {hp}");
-    Map.AreaDrawer(row, col);
+    Console.WriteLine($"Coins collected: {player.coins}");
+    Console.WriteLine($"Hp left: {player.hp}");
+    Map.AreaDrawer(player.row, player.col);
     ConsoleKey key = Console.ReadKey(true).Key;
     switch (key)
     {
         case ConsoleKey.W:
         case ConsoleKey.UpArrow:
-            if (Map.MovementValidation(row, col, "up"))
-            {
-                row--;
-            }
+            player.Move("up");
             break;
         case ConsoleKey.S:
         case ConsoleKey.DownArrow:
-            if (Map.MovementValidation(row, col, "down"))
-            {
-                row++;
-            }
+            player.Move("down");
             break;
         case ConsoleKey.A:
         case ConsoleKey.LeftArrow:
-            if (Map.MovementValidation(row, col, "left"))
-            {
-                col -= 2;
-            }
+            player.Move("left");
             break;
         case ConsoleKey.D:
         case ConsoleKey.RightArrow:
-            if (Map.MovementValidation(row, col, "right"))
-            {
-               col += 2;
-            }
+            player.Move("right");
             break;
         case ConsoleKey.Escape:
             running = false;
             break;
 
     }
-    char interaction = Map.StepOn(row, col);
+    char interaction = Map.StepOn(player.row, player.col);
     if (interaction == 'm')
     {
-        coinsCollected++;
+        player.AddCoin();
     }
     else if(interaction == 't')
     {
-        hp--;
+        player.ReduceHp();
     }
 
-    if (coinsCollected == 3 || hp < 1)
+    if (player.coins == 3 || player.hp < 1)
     {
-        string message = (coinsCollected == 3) ? "You win!" : "You died!"; 
+        string message = (player.coins == 3) ? "You win!" : "You died!"; 
         Console.WriteLine(message);
         Console.CursorVisible = true;
         running = AskPlayAgain();
         Console.CursorVisible = false;
-        coinsCollected = 0;
-        hp = 2;
-        row = 9;
-        col = 0;
         Map.AreaBuilder();
-
+        player = new Player();
         if (running)
         {
             Console.Clear();    

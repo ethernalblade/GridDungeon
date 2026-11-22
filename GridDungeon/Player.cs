@@ -1,0 +1,51 @@
+﻿namespace GridDungeon
+{
+    class Player
+    {
+        public int coins = 0;
+        public int hp = 2;
+        public int row = 9;
+        public int col = 0;
+        
+        public void Move(string direction)
+        {
+            switch (direction)
+            {
+                case "up":
+                    if (Map.MovementValidation(row, col, direction))
+                    {
+                        row--;
+                    }
+                    break;
+                case "down":
+                    if (Map.MovementValidation(row, col, direction))
+                    {
+                        row++;
+                    }
+                    break;
+                case "left":
+                    if (Map.MovementValidation(row, col, direction))
+                    {
+                        col -= 2;
+                    }
+                    break;
+                case "right":
+                    if (Map.MovementValidation(row, col, direction))
+                    {
+                        col += 2;
+                    }
+                    break;
+            }
+            
+        }
+        public void AddCoin()
+        {
+            coins++;
+        }
+        public void ReduceHp()
+        {
+            hp--;
+        }
+
+    }
+}
