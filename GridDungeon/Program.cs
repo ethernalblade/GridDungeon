@@ -1,81 +1,65 @@
-﻿int row = 9;
+﻿using GridDungeon;
+
+int row = 9;
 int col = 0;
 bool running = true;
 Console.CursorVisible = false;
 int coinsCollected = 0;
 int hp = 2;
-bool reset = false;
-string[] map =
-{
-    ". . . . . . . . . M",
-    ". # . # # # # # # #",
-    ". # . . . # . . . T",
-    ". # . # . # . # # #",
-    ". # . # . # . . . #",
-    ". # . # . . . # . #",
-    ". # . # . # . # . M",
-    ". # . # # # . # # #",
-    ". # . . . # . # . T",
-    ". # . # M # . . . #",
-};
-char[,] area = new char[map.Length, map[0].Length];
-AreaBuilder(area, map);
+Map.AreaBuilder();
 while (running)
 {
-    if (reset)
-    {
-        Console.Clear();
-        reset = false;
-    }
+
     Console.SetCursorPosition(0, 0);
     Console.WriteLine($"Coins collected: {coinsCollected}");
     Console.WriteLine($"Hp left: {hp}");
-    AreaDrawer(area, row, col);
+    Map.AreaDrawer(row, col);
     ConsoleKey key = Console.ReadKey(true).Key;
     switch (key)
     {
         case ConsoleKey.W:
         case ConsoleKey.UpArrow:
-            if (row > 0 && area[row - 1, col] != '#')
+            if (Map.MovementValidation(row, col, "up"))
             {
                 row--;
             }
             break;
         case ConsoleKey.S:
         case ConsoleKey.DownArrow:
-            if (row < map.Length - 1 && area[row + 1, col] != '#' )
+            if (Map.MovementValidation(row, col, "down"))
             {
                 row++;
             }
             break;
         case ConsoleKey.A:
         case ConsoleKey.LeftArrow:
-            if (col > 1 && area[row, col - 2] != '#' )
+            if (Map.MovementValidation(row, col, "left"))
             {
                 col -= 2;
             }
             break;
         case ConsoleKey.D:
         case ConsoleKey.RightArrow:
-            if (col < map[0].Length - 2 && area[row, col + 2] != '#' )
+            if (Map.MovementValidation(row, col, "right"))
             {
-                col += 2;
+               col += 2;
             }
             break;
+        case ConsoleKey.Escape:
             running = false;
             break;
 
     }
-    if (area[row, col] == 'M')
+    char interaction = Map.StepOn(row, col);
+    if (interaction == 'm')
     {
         coinsCollected++;
-        area[row, col] = '.';
     }
-    else if(area[row, col] == 'T')
+    else if(interaction == 't')
     {
         hp--;
-        area[row, col] = '.';
     }
+
     if (coinsCollected == 3 || hp < 1)
     {
         string message = (coinsCollected == 3) ? "You win!" : "You died!"; 
@@ -87,45 +71,18 @@ while (running)
         hp = 2;
         row = 9;
         col = 0;
-        AreaBuilder(area, map);
+        Map.AreaBuilder();
+
         if (running)
         {
-            Console.Clear();
-            reset = false;
+            Console.Clear();    
         }
     }
 
 }
 
 
-static void AreaBuilder(char[,] area, string[] map)
-{
-    for (int i = 0; i < map.Length; i++)
-    {
-        for (int j = 0; j < map[i].Length ; j++)
-        {
-            area[i, j] = map[i][j];
-        }
-    }
-}
-static void AreaDrawer(char[,] area, int row, int col)
-{
-    for (int i = 0; i < area.GetLength(0); i++)
-    {
-        for (int j = 0; j < area.GetLength(1); j++)
-        {
-            if (i == row && j == col)
-            {
-                Console.Write("@");
-            }
-            else
-            {
-                Console.Write(area[i, j]);
-            }
-        }
-        Console.WriteLine();
-    }
-}
+
 
 static bool AskPlayAgain()
 {
