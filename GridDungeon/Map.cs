@@ -40,8 +40,17 @@
                     }
                     else
                     {
-                        Console.Write(area[i, j]);
-                        Console.Write(' ');
+                        if (area[i, j] == 'T')
+                        {
+                            Console.Write('.');
+                            Console.Write(' ');
+                        }
+                        else
+                        {
+                            Console.Write(area[i, j]);
+                            Console.Write(' ');
+                        }
+
                     }
                 }
                 Console.WriteLine();
@@ -65,7 +74,7 @@
                     }
                     break;
                 case "left":
-                    if (col > 1 && area[row, col - 1] != '#')
+                    if (col > 0 && area[row, col - 1] != '#')
                     {
                         result = true;
                     }
@@ -89,7 +98,7 @@
             }
             else if (area[row, col] == 'T')
             {
-                area[row, col] = '.';
+                area[row, col] = '*';
                 result = 't';
             }
             return result;
