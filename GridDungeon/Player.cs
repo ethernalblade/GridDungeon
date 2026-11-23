@@ -26,13 +26,13 @@
                 case "left":
                     if (Map.MovementValidation(row, col, direction))
                     {
-                        col -= 2;
+                        col -= 1;
                     }
                     break;
                 case "right":
                     if (Map.MovementValidation(row, col, direction))
                     {
-                        col += 2;
+                        col += 1;
                     }
                     break;
             }

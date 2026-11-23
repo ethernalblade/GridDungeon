@@ -4,16 +4,16 @@
     {
         static string[] map =
         {
-            ". . . . . . . . . M",
-            ". # . # # # # # # #",
-            ". # . . . # . . . T",
-            ". # . # . # . # # #",
-            ". # . # . # . . . #",
-            ". # . # . . . # . #",
-            ". # . # . # . # . M",
-            ". # . # # # . # # #",
-            ". # . . . # . # . T",
-            ". # . # M # . . . #",
+            ".........M",
+            ".#.#######",
+            ".#...#...T",
+            ".#.#.#.###",
+            ".#.#.#...#",
+            ".#.#...#.#",
+            ".#.#.#.#.M",
+            ".#.###.###",
+            ".#...#.#.T",
+            ".#.#M#...#",
         };
         static char[,] area = new char[map.Length, map[0].Length];
 
@@ -36,10 +36,12 @@
                     if (i == row && j == col)
                     {
                         Console.Write("@");
+                        Console.Write(' ');
                     }
                     else
                     {
                         Console.Write(area[i, j]);
+                        Console.Write(' ');
                     }
                 }
                 Console.WriteLine();
@@ -63,13 +65,13 @@
                     }
                     break;
                 case "left":
-                    if (col > 1 && area[row, col - 2] != '#')
+                    if (col > 1 && area[row, col - 1] != '#')
                     {
                         result = true;
                     }
                     break;
                 case "right":
-                    if (col < map[0].Length - 2 && area[row, col + 2] != '#')
+                    if (col < map[0].Length - 1 && area[row, col + 1] != '#')
                     {
                         result = true;
                     }
