@@ -1,21 +1,36 @@
-﻿namespace GridDungeon
+﻿using System.Runtime.CompilerServices;
+
+namespace GridDungeon
 {
     class Map
     {
         static string[] map =
         {
-            ".........M",
-            ".#.#######",
-            ".#...#...T",
-            ".#.#.#.###",
-            ".#.#.#...#",
-            ".#.#...#.#",
-            ".#.#.#.#.M",
-            ".#.###.###",
-            ".#...#.#.T",
-            ".#.#M#...#",
+            ".....#.....#....M#...#...#T..........#...",
+            ".#.###.###.#.#####.#.#.###.###.###.#.#.#.",
+            ".#M#...#...#.......#.#.............#...#M",
+            ".###.###.#########.#.#.......#####.#.#.##",
+            "...#.T...#.......#.#.........#..M#.#.#...",
+            "##.#.#######.###.#######.#####.#####.###.",
+            ".....#...T.#.#.#.......#.........#.......",
+            ".#.#.#.#.#.#.#T###.###.#####.###.#.#.#.#.",
+            "...#.#T#.#.#M#.#.#...........#.#.#...#.#.",
+            ".###.#.###.###.#.###.###.###.#.#.#.#####.",
+            "...#.#.....#.#.#.......#..M#.....#...T...",
+            "##.#.#.....#.#.#.#######.#####.###.#.#.#.",
+            "...#M#.....#.#T..T...#.#.....#T..#.#M#.#.",
+            ".#####.#####.###.###.#.#####.#####.###.#.",
+            ".........#...T.....#.....#.#.....#.......",
+            ".#.#####.#########.#######.#.###.###.....",
+            ".#.#.T...#M....#...#.............#.#.....",
+            "##.#.###.#####.#.#.#.###.......###.###.##",
+            ".#.#T#...#.....#.#...#...........#.....#M",
+            ".#.#.###.#.#T#.#T#.###.#.......#.#####.#.",
+            "...#...#...#.........................#...",
         };
+
         static char[,] area = new char[map.Length, map[0].Length];
+        static bool[,] visiblArea = new bool[map.Length, map[0].Length];
 
         public static void AreaBuilder()
         {
@@ -24,6 +39,7 @@
                 for (int j = 0; j < map[i].Length; j++)
                 {
                     area[i, j] = map[i][j];
+                    visiblArea[i, j] = false;
                 }
             }
         }
@@ -40,15 +56,23 @@
                     }
                     else
                     {
-                        if (area[i, j] == 'T')
+                        if (!visiblArea[i, j])
                         {
-                            Console.Write('.');
+                            Console.Write('?');
                             Console.Write(' ');
                         }
                         else
                         {
-                            Console.Write(area[i, j]);
-                            Console.Write(' ');
+                            if (area[i, j] == 'T')
+                            {
+                                Console.Write('.');
+                                Console.Write(' ');
+                            }
+                            else
+                            {
+                                Console.Write(area[i, j]);
+                                Console.Write(' ');
+                            }
                         }
 
                     }
@@ -86,6 +110,7 @@
                     }
                     break;
             }
+
             return result;
         }
         public static char StepOn(int row, int col)
@@ -102,6 +127,21 @@
                 result = 't';
             }
             return result;
+        }
+        public static void Reveal(int row, int col)
+        {
+            for (int i = 0; i < area.GetLength(0); i++)
+            {
+                for (int j = 0; j < area.GetLength(1); j++)
+                {
+                    int visionRadius = 2;
+                    if (Math.Abs(i - row) <= visionRadius && Math.Abs(j - col) <= visionRadius)
+                    {
+
+                        visiblArea[i, j] = true;
+                    }
+                }
+            }
         }
 
     }

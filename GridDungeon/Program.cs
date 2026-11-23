@@ -10,6 +10,7 @@ while (running)
     Console.SetCursorPosition(0, 0);
     Console.WriteLine($"Coins collected: {player.coins}");
     Console.WriteLine($"Hp left: {player.hp}");
+    Map.Reveal(player.row, player.col);
     Map.AreaDrawer(player.row, player.col);
     ConsoleKey key = Console.ReadKey(true).Key;
     switch (key)
@@ -45,9 +46,9 @@ while (running)
         player.ReduceHp();
     }
 
-    if (player.coins == 3 || player.hp < 1)
+    if (player.coins == 10 || player.hp < 1)
     {
-        string message = (player.coins == 3) ? "You win!" : "You died!"; 
+        string message = (player.coins == 10) ? "You win!" : "You died!"; 
         Console.WriteLine(message);
         Console.CursorVisible = true;
         running = AskPlayAgain();

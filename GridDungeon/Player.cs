@@ -1,10 +1,10 @@
-﻿namespace GridDungeon
+﻿    namespace GridDungeon
 {
     class Player
     {
         public int coins = 0;
-        public int hp = 2;
-        public int row = 9;
+        public int hp = 14;
+        public int row = 20;
         public int col = 0;
         
         public void Move(string direction)
