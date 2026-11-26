@@ -1,45 +1,27 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace GridDungeon
+﻿namespace GridDungeon
 {
     class Map
     {
-        static string[] map =
-        {
-            ".....#.....#....M#...#...#T..........#...",
-            ".#.###.###.#.#####.#.#.###.###.###.#.#.#.",
-            ".#M#...#...#.......#.#.............#...#M",
-            ".###.###.#########.#.#.......#####.#.#.##",
-            "...#.T...#.......#.#.........#..M#.#.#...",
-            "##.#.#######.###.#######.#####.#####.###.",
-            ".....#...T.#.#.#.......#.........#.......",
-            ".#.#.#.#.#.#.#T###.###.#####.###.#.#.#.#.",
-            "...#.#T#.#.#M#.#.#...........#.#.#...#.#.",
-            ".###.#.###.###.#.###.###.###.#.#.#.#####.",
-            "...#.#.....#.#.#.......#..M#.....#...T...",
-            "##.#.#.....#.#.#.#######.#####.###.#.#.#.",
-            "...#M#.....#.#T..T...#.#.....#T..#.#M#.#.",
-            ".#####.#####.###.###.#.#####.#####.###.#.",
-            ".........#...T.....#.....#.#.....#.......",
-            ".#.#####.#########.#######.#.###.###.....",
-            ".#.#.T...#M....#...#.............#.#.....",
-            "##.#.###.#####.#.#.#.###.......###.###.##",
-            ".#.#T#...#.....#.#...#...........#.....#M",
-            ".#.#.###.#.#T#.#T#.###.#.......#.#####.#.",
-            "...#...#...#.........................#...",
-        };
-
+        static string[] map = File.ReadAllLines(Path.Combine(AppContext.BaseDirectory, "maps", "level1.txt"));
         static char[,] area = new char[map.Length, map[0].Length];
-        static bool[,] visiblArea = new bool[map.Length, map[0].Length];
-
+        static bool[,] visibleArea = new bool[map.Length, map[0].Length];
+        static int coinsCount;
+        static bool doorIsOpen = false;
+        static int visionRadius = 2;
         public static void AreaBuilder()
         {
+            coinsCount = 0;
+            doorIsOpen = false;
             for (int i = 0; i < map.Length; i++)
             {
                 for (int j = 0; j < map[i].Length; j++)
                 {
                     area[i, j] = map[i][j];
-                    visiblArea[i, j] = false;
+                    if(area[i, j] == 'M')
+                    {
+                        coinsCount++;
+                    }
+                    visibleArea[i, j] = false;
                 }
             }
         }
@@ -56,7 +38,7 @@ namespace GridDungeon
                     }
                     else
                     {
-                        if (!visiblArea[i, j])
+                        if (!visibleArea[i, j])
                         {
                             Console.Write('?');
                             Console.Write(' ');
@@ -66,6 +48,11 @@ namespace GridDungeon
                             if (area[i, j] == 'T')
                             {
                                 Console.Write('.');
+                                Console.Write(' ');
+                            }
+                            else if (area[i, j] == 'D' && doorIsOpen)
+                            {
+                                Console.Write('O');
                                 Console.Write(' ');
                             }
                             else
@@ -86,25 +73,25 @@ namespace GridDungeon
             switch (direction)
             {
                 case "up":
-                    if (row > 0 && area[row - 1, col] != '#')
+                    if (row > 0 && IsWalkable(row - 1, col))
                     {
                         result = true;
                     }
                     break;
                 case "down":
-                    if (row < map.Length - 1 && area[row + 1, col] != '#')
+                    if (row < map.Length - 1 && IsWalkable(row + 1, col))
                     {
                         result = true;
                     }
                     break;
                 case "left":
-                    if (col > 0 && area[row, col - 1] != '#')
+                    if (col > 0 && IsWalkable(row, col - 1))
                     {
                         result = true;
                     }
                     break;
                 case "right":
-                    if (col < map[0].Length - 1 && area[row, col + 1] != '#')
+                    if (col < map[0].Length - 1 && IsWalkable(row, col + 1))
                     {
                         result = true;
                     }
@@ -126,6 +113,13 @@ namespace GridDungeon
                 area[row, col] = '*';
                 result = 't';
             }
+            else if (area[row, col] == 'D')
+            {
+                if (doorIsOpen)
+                {
+                    result = 'd';
+                }
+            }
             return result;
         }
         public static void Reveal(int row, int col)
@@ -134,14 +128,26 @@ namespace GridDungeon
             {
                 for (int j = 0; j < area.GetLength(1); j++)
                 {
-                    int visionRadius = 2;
                     if (Math.Abs(i - row) <= visionRadius && Math.Abs(j - col) <= visionRadius)
                     {
 
-                        visiblArea[i, j] = true;
+                        visibleArea[i, j] = true;
                     }
                 }
             }
+        }
+        static bool IsWalkable(int row, int col)
+        {
+            return area[row, col] != '#' && (area[row, col] != 'D' || doorIsOpen);
+        }
+        public static bool OpenDoor(int coins)
+        {
+            if (coins == coinsCount)
+            {
+                doorIsOpen = true;
+                return true;
+            }
+            return false;
         }
 
     }

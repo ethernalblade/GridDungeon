@@ -3,7 +3,7 @@
     class Player
     {
         public int coins = 0;
-        public int hp = 14;
+        public int hp = 10;
         public int row = 20;
         public int col = 0;
         

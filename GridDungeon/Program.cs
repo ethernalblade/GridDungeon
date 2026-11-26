@@ -9,7 +9,7 @@ while (running)
 {
     Console.SetCursorPosition(0, 0);
     Console.WriteLine($"Coins collected: {player.coins}");
-    Console.WriteLine($"Hp left: {player.hp}");
+    Console.WriteLine($"Hp left: {player.hp}  ");
     Map.Reveal(player.row, player.col);
     Map.AreaDrawer(player.row, player.col);
     ConsoleKey key = Console.ReadKey(true).Key;
@@ -37,18 +37,23 @@ while (running)
 
     }
     char interaction = Map.StepOn(player.row, player.col);
+    bool won = interaction == 'd';
     if (interaction == 'm')
     {
         player.AddCoin();
+        if (Map.OpenDoor(player.coins))
+        {
+            Console.WriteLine("The door is open!");
+        }
     }
     else if(interaction == 't')
     {
         player.ReduceHp();
     }
 
-    if (player.coins == 10 || player.hp < 1)
+    if (won || player.hp < 1)
     {
-        string message = (player.coins == 10) ? "You win!" : "You died!"; 
+        string message = won ? "You win!                 " : "You died!                  "; 
         Console.WriteLine(message);
         Console.CursorVisible = true;
         running = AskPlayAgain();
