@@ -1,12 +1,13 @@
 # GridDungeon
 
 A small text-based maze game for the console, written in C# (.NET).
-Explore a foggy maze, collect all the coins and avoid the hidden traps.
+Explore a foggy maze, collect all the coins, avoid the hidden traps and find the door.
 
 ## Gameplay
 
-- Collect all coins to win.
-- Every trap costs you 1 HP. If your HP reaches 0, you lose.
+- Collect **all coins**. When you pick up the last one, the door opens.
+- Walk into the open door to win.
+- You start with **10 HP**. Every trap costs you 1 HP. If your HP reaches 0, you lose.
 - Traps are **hidden**. When you step on one, it is marked with `*` and does not hurt again.
 - **Fog of war:** you only see a small area around you. Cells you have already explored stay visible.
 - After a win or a loss you can start a new game or quit.
@@ -17,8 +18,12 @@ Explore a foggy maze, collect all the coins and avoid the hidden traps.
 | `#`    | Wall    |
 | `.`    | Floor   |
 | `M`    | Coin    |
+| `D`    | Closed door (blocks your way) |
+| `O`    | Open door (walk in to win) |
 | `*`    | Triggered trap |
-| `?` | Not explored yet |
+| `?`    | Not explored yet |
+
+Hidden traps look like normal floor until you step on them.
 
 ## Controls
 
@@ -50,16 +55,17 @@ GridDungeon/
     ├── GridDungeon.csproj
     ├── Program.cs
     ├── Map.cs
-    └── Player.cs
+    ├── Player.cs
+    └── maps/
+        └── level1.txt
 ```
 
 | File | Responsibility |
 |------|----------------|
 | `Program.cs` | Game loop, keyboard input, win/lose check, "play again" question |
-| `Map.cs` | The maze: builds it from text, draws it, checks walls, hidden traps, coins and the fog of war |
+| `Map.cs` | Loads the map from a file, draws it, checks walls and the door, handles coins, hidden traps and the fog of war |
 | `Player.cs` | Player state (position, HP, coins) and movement |
-
-The maze is defined as an array of text lines in `Map.cs`, so changing the level only means editing those lines.
+| `maps/level1.txt` | The level data |
 
 ## Roadmap
 
@@ -68,18 +74,23 @@ Planned ideas, the order may change:
 - [x] v1: playable maze with coins, traps and HP
 - [x] v2: split the code into classes (`Map`, `Player`)
 - [x] v3: hidden traps, fog of war, bigger map
-- [ ] v4: load maps from text files
+- [x] v4: load maps from text files
+
+Maybe later:
+
 - [ ] v5: chests, inventory and items (item data loaded from files)
 - [ ] v6: enemies and turn-based combat
+- [ ] v7: several levels (one map file each)
 
 ## Known limitations
 
 Things I plan to clean up as I learn more C#:
 
-- Directions are plain strings; an `enum` would be safer.
+- Directions and tile results are plain strings and characters; an `enum` would be safer.
 - Player fields are public; properties would protect them.
-- `Map` is static, so only one map can exist at a time (needed to change for loading maps from files).
-- The number of coins to win and the start position are fixed values in the code, not read from the map.
+- `Map` is static, so only one map can be loaded at a time.
+- The player start position (row 20, column 0) is fixed in `Player.cs`, so the map file must have 21 rows.
+- There is no error handling yet: if the map file is missing or broken, the game crashes at startup.
 
 ## About
 
